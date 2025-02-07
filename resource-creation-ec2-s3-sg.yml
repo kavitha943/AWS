@@ -1,0 +1,32 @@
+Resources:
+  S3Bucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: s3-bucket-kavitha2-demo-123
+      VersioningConfiguration:
+        Status: Enabled # enables versioning for the bucket
+    DeletionPolicy: Retain # prevents the bucket from being deleted when the stack is deleted
+  MySecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: Enable SSH access via port 22
+      VpcId: vpc-03d094f2fff07740e # VPC ID
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: 22
+          ToPort: 22
+          CidrIp: 0.0.0.0/0
+      SecurityGroupEgress: 
+        - IpProtocol: tcp
+          FromPort: 0
+          ToPort: 65535
+          CidrIp: 0.0.0.0/0
+  EC2Instance:
+    Type: AWS::EC2::Instance
+    Properties:
+      AvailabilityZone: eu-north-1a
+      InstanceType: t3.micro
+      ImageId: ami-09a9858973b288bdd
+      KeyName: script
+      SecurityGroupIds: 
+        - !Ref MySecurityGroup # gets reference security group created above in ID format
